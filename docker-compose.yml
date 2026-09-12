@@ -1,0 +1,39 @@
+version: "3.9"
+# Sovereign SmartPi Telemetry — docker-compose
+# Usage: docker-compose up --build
+
+services:
+  smartpi-telemetry:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: sovereign-smartpi-telemetry:latest
+    container_name: sovereign-smartpi-telemetry
+    restart: unless-stopped
+    ports:
+      - "8805:8805"
+    environment:
+      SBB_MQTT_BROKER: ${SBB_MQTT_BROKER}
+      SBB_SAMPLE_RATE_HZ: ${SBB_SAMPLE_RATE_HZ}
+      SBB_FFT_WINDOW_SIZE: ${SBB_FFT_WINDOW_SIZE}
+      SBB_FAULT_MODEL_PATH: ${SBB_FAULT_MODEL_PATH}
+      SBB_API_KEY: ${SBB_API_KEY:-change-me}
+      SBB_N8N_EVENT_BUS_URL: ${SBB_N8N_EVENT_BUS_URL:-http://host.docker.internal:5678/webhook/event-bus}
+      SERVICE_PORT: 8805
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./.data:/app/.data:rw
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8805/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - sbb-platform
+
+networks:
+  sbb-platform:
+    external: true
+    name: sbb-platform-network
