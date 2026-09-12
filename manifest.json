@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "PKG-025",
+  "slug": "smartpi-telemetry",
+  "name": "sovereign-smartpi-telemetry",
+  "domain": "Edge Hardware & Acoustic Diagnostics",
+  "version": "1.0.0",
+  "status": "PRODUCTION_READY",
+  "entrypoint": "src/core.py",
+  "cli_command": "sovereign-smartpi-telemetry",
+  "microservice_port": 8805,
+  "n8n_webhook_path": "smartpi-telemetry-trigger",
+  "n8n_workflow": "n8n/workflow.json",
+  "test_suite": "tests/test_solution.py",
+  "author": "Russell Alan Powers",
+  "license": "MIT"
+}
